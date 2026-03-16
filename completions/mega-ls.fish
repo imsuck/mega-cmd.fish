@@ -1,4 +1,4 @@
-function __mega_ls_current_path
+function __mega_ls_current_token
     set -l token (commandline -ct)
     if test -z "$token"
         echo /
@@ -8,16 +8,16 @@ function __mega_ls_current_path
 end
 
 function __mega_ls_nodes
-    set -l base (__mega_ls_current_path)
+    set -l base (__mega_ls_current_token)
 
     mega-ls -a $base 2>/dev/null \
-        | string match -r '.* \(folder\)$' \
         | string replace -r ' \(folder\)$' '/' \
+        | string replace -r ' \([^)]*\)$' '' \
         | while read -l node
             if test "$base" = "/"
-                echo "/$node"
+                printf "%s\tremote\n" "/$node"
             else
-                echo "$base$node"
+                printf "%s\tremote\n" "$base$node"
             end
         end
 end

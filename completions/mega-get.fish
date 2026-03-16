@@ -14,11 +14,10 @@ function __mega_get_remote_nodes
         | string replace -r ' \([^)]*\)$' '' \
         | while read -l node
             if test "$base" = "/"
-                set full "/$node"
+                printf "%s\tremote\n" "/$node"
             else
-                set full "$base$node"
+                printf "%s\tremote\n" "$base$node"
             end
-            printf "%s\tremote\n" $full
         end
 end
 

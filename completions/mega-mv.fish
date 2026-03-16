@@ -1,3 +1,7 @@
+function __mega_mv_argc
+    count (commandline -opc)
+end
+
 function __mega_mv_remote_nodes
     set -l base (commandline -ct)
 
@@ -6,18 +10,18 @@ function __mega_mv_remote_nodes
     end
 
     mega-ls -a $base 2>/dev/null \
-        | string match -r '.* \(folder\)$' \
         | string replace -r ' \(folder\)$' '/' \
+        | string replace -r ' \([^)]*\)$' '' \
         | while read -l node
             if test "$base" = "/"
-                set full "/$node"
+                printf "%s\tremote\n" "/$node"
             else
-                set full "$base$node"
+                printf "%s\tremote\n" "$base$node"
             end
-            printf "%s\tremote\n" $full
         end
 end
 
+# both args: remote nodes only
 complete -c mega-mv -f -a "(__mega_mv_remote_nodes)"
 
 complete -c mega-mv -l use-pcre -d 'Use PCRE expressions'

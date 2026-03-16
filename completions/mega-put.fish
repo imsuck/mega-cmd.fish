@@ -6,15 +6,14 @@ function __mega_put_remote_dirs
     end
 
     mega-ls -a $base 2>/dev/null \
-        | string match -r '.* \(folder\)$' \
         | string replace -r ' \(folder\)$' '/' \
+        | string replace -r ' \([^)]*\)$' '' \
         | while read -l dir
             if test "$base" = "/"
-                set full "/$dir"
+                printf "%s\tremote\n" "/$dir"
             else
-                set full "$base$dir"
+                printf "%s\tremote\n" "$base$dir"
             end
-            printf "%s\tremote\n" $full
         end
 end
 
